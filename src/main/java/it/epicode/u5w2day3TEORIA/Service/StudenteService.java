@@ -6,8 +6,12 @@ import it.epicode.u5w2day3TEORIA.Model.Studente;
 import it.epicode.u5w2day3TEORIA.Model.Universita;
 import it.epicode.u5w2day3TEORIA.Repository.StudenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Service
@@ -30,9 +34,14 @@ public class StudenteService {
         studente.setUniversita(universita);
         return studenteRepository.save(studente);
     }
+    /*
+    modifichiamo il metodo getAll prendendo 3 parametri di ingresso che indicano quale pagina, il numero di elementi per pagina e il campo su cui ordinare.
+    si crea un oggetto pageable con questi dati e lo si passa al findall. Il findall ritorna ritorna un page di studenti
+     */
+    public Page<Studente> getAllStudenti(int page, int size, String sortBy){
 
-    public List<Studente> getAllStudenti(){
-        return studenteRepository.findAll();
+        PageRequest pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return studenteRepository.findAll(pageable);
     }
 
     public Studente getStudente(int matricola) throws NotFoundException{
